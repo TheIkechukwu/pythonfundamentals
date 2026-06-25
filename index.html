@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn With iKay – Python Fundamentals Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #0d3d22;
+    --green-mid: #155a32;
+    --green-light: #e8f5ed;
+    --green-accent: #1a7a3c;
+    --white: #ffffff;
+    --gray-light: #f7f7f7;
+    --gray-border: #dde8e2;
+    --text: #1a1a1a;
+    --code-bg: #0d3d22;
+    --code-text: #a8e6c3;
+    --tag-bg: #d4edda;
+    --shadow: 0 2px 16px rgba(13,61,34,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--green);
+    color: #fff;
+    padding: 28px 40px 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  .header img { height: 56px; width: auto; }
+  .header-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .header-text p {
+    font-size: 0.85rem;
+    opacity: 0.78;
+    margin-top: 2px;
+    font-weight: 300;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    background: var(--green-mid);
+    height: 4px;
+    width: 100%;
+    position: sticky;
+    top: 96px;
+    z-index: 99;
+  }
+  #progress-bar { height: 4px; background: #4de680; width: 0%; transition: width 0.2s; }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    background: var(--green-light);
+    border-bottom: 2px solid var(--gray-border);
+    padding: 0 32px;
+    position: sticky;
+    top: 100px;
+    z-index: 98;
+  }
+  .nav-tab {
+    padding: 13px 22px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.88rem;
+    color: var(--green);
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .nav-tab:hover { background: #d3ead9; }
+  .nav-tab.active { border-bottom: 3px solid var(--green); background: #fff; font-weight: 700; }
+
+  /* MAIN LAYOUT */
+  .main { display: flex; min-height: calc(100vh - 156px); }
+  .sidebar {
+    width: 220px;
+    min-width: 180px;
+    background: var(--gray-light);
+    border-right: 1px solid var(--gray-border);
+    padding: 24px 0;
+    position: sticky;
+    top: 156px;
+    height: calc(100vh - 156px);
+    overflow-y: auto;
+    display: none;
+  }
+  .sidebar.show { display: block; }
+  .sidebar-item {
+    padding: 9px 22px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: var(--green);
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .sidebar-item:hover, .sidebar-item.active { background: var(--green-light); border-left: 3px solid var(--green); font-weight: 600; }
+
+  .content { flex: 1; padding: 32px 36px 48px 36px; max-width: 960px; }
+
+  /* SECTION */
+  .section { display: none; animation: fadeIn 0.25s; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--green);
+    font-size: 1.55rem;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .section-desc { font-size: 0.95rem; color: #555; margin-bottom: 28px; line-height: 1.6; }
+
+  /* CARD */
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-border);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: var(--green);
+    color: #fff;
+    padding: 12px 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-header .icon { font-size: 1.1em; }
+  .card-body { padding: 18px 20px; }
+
+  /* CODE BLOCK */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 7px;
+    padding: 14px 16px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.86rem;
+    overflow-x: auto;
+    margin: 10px 0 6px 0;
+    line-height: 1.65;
+    position: relative;
+  }
+  .copy-btn {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    background: var(--green-accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .copy-btn:hover { opacity: 1; }
+  pre .comment { color: #6dbf8a; font-style: italic; }
+  pre .keyword { color: #81d4fa; }
+  pre .string { color: #ffe082; }
+  pre .number { color: #f48fb1; }
+  pre .func { color: #80cbc4; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 8px 0; }
+  th { background: var(--green); color: #fff; padding: 9px 14px; text-align: left; font-weight: 600; }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--gray-border); }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) { background: var(--green-light); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--green);
+    border-radius: 4px;
+    padding: 2px 9px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    margin: 2px 3px;
+  }
+  .badge.beginner { background: #d4edda; color: #155724; }
+  .badge.tip { background: #fff3cd; color: #856404; }
+  .badge.warning { background: #f8d7da; color: #721c24; }
+
+  /* QUIZ */
+  .quiz-box {
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 18px 0;
+  }
+  .quiz-q { font-weight: 600; color: var(--green); margin-bottom: 12px; font-size: 0.95rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    padding: 9px 16px;
+    border-radius: 6px;
+    border: 2px solid var(--gray-border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+  }
+  .quiz-opt:hover { border-color: var(--green); background: var(--green-light); }
+  .quiz-opt.correct { border-color: #28a745; background: #d4edda; color: #155724; }
+  .quiz-opt.wrong { border-color: #dc3545; background: #f8d7da; color: #721c24; }
+  .quiz-feedback { margin-top: 10px; font-size: 0.88rem; font-weight: 500; min-height: 18px; }
+
+  /* SEARCH */
+  .search-wrap { margin-bottom: 22px; }
+  .search-input {
+    width: 100%;
+    max-width: 440px;
+    padding: 10px 16px;
+    border: 2px solid var(--gray-border);
+    border-radius: 24px;
+    font-size: 0.92rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border 0.18s;
+  }
+  .search-input:focus { border-color: var(--green); }
+
+  /* FOOTER */
+  .footer {
+    background: var(--green);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 18px 0;
+    font-size: 0.82rem;
+  }
+  .footer span { color: #fff; font-weight: 600; }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .header { padding: 16px 16px; gap: 14px; }
+    .header img { height: 40px; }
+    .content { padding: 18px 12px 36px 12px; }
+    .nav-tabs { padding: 0 8px; }
+    table { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <img src="logo.png">
+  <div class="header-text">
+    <h1>Python Fundamentals</h1>
+    <p>Interactive Cheat Sheet &mdash; Learn With iKay</p>
+  </div>
+</header>
+<div class="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<nav class="nav-tabs" id="navTabs">
+  <div class="nav-tab active" onclick="showSection('basics',this)">🐍 Basics</div>
+  <div class="nav-tab" onclick="showSection('datatypes',this)">📦 Data Types</div>
+  <div class="nav-tab" onclick="showSection('operators',this)">⚙️ Operators</div>
+  <div class="nav-tab" onclick="showSection('control',this)">🔀 Control Flow</div>
+  <div class="nav-tab" onclick="showSection('functions',this)">🔧 Functions</div>
+  <div class="nav-tab" onclick="showSection('lists',this)">📋 Lists & Dicts</div>
+  <div class="nav-tab" onclick="showSection('strings',this)">💬 Strings</div>
+  <div class="nav-tab" onclick="showSection('files',this)">📁 Files & Errors</div>
+  <div class="nav-tab" onclick="showSection('quiz',this)">🧠 Quick Quiz</div>
+</nav>
+
+<div class="main">
+<div class="content" id="mainContent">
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <input class="search-input" type="text" id="searchInput" placeholder="🔍  Search concepts, keywords, examples…" oninput="handleSearch(this.value)">
+  <div id="searchResults" style="margin-top:10px;"></div>
+</div>
+
+<!-- ======= BASICS ======= -->
+<div class="section active" id="basics">
+  <div class="section-title">🐍 Python Basics</div>
+  <div class="section-desc">Python is a readable, beginner-friendly language. Here are the building blocks every learner starts with.</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">💻</span>Your First Python Program</div>
+    <div class="card-body">
+      <p style="margin-bottom:8px;">The classic starting point — printing text to the screen.</p>
+      <div style="position:relative">
+        <pre id="code-hello"><span class="comment"># This is a comment — Python ignores it</span>
+<span class="func">print</span>(<span class="string">"Hello, World!"</span>)
+<span class="func">print</span>(<span class="string">"Welcome to Learn With iKay!"</span>)</pre>
+        <button class="copy-btn" onclick="copyCode('code-hello')">Copy</button>
+      </div>
+      <span class="badge beginner">Beginner</span>
+      <span class="badge">Output: Hello, World!</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📌</span>Variables & Assignment</div>
+    <div class="card-body">
+      <p style="margin-bottom:8px;">Variables store values. No need to declare types!</p>
+      <div style="position:relative">
+        <pre id="code-vars">name = <span class="string">"Ada"</span>           <span class="comment"># string</span>
+age = <span class="number">25</span>               <span class="comment"># integer</span>
+height = <span class="number">1.65</span>          <span class="comment"># float</span>
+is_student = <span class="keyword">True</span>     <span class="comment"># boolean</span>
+
+<span class="func">print</span>(name, age, height, is_student)
+<span class="comment"># Output: Ada 25 1.65 True</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-vars')">Copy</button>
+      </div>
+      <span class="badge tip">Tip: Variable names are case-sensitive</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">⌨️</span>Getting User Input</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-input">name = <span class="func">input</span>(<span class="string">"Enter your name: "</span>)
+<span class="func">print</span>(<span class="string">"Hello,"</span>, name)
+
+age = <span class="func">int</span>(<span class="func">input</span>(<span class="string">"Enter your age: "</span>))  <span class="comment"># convert to int</span>
+<span class="func">print</span>(<span class="string">"You are"</span>, age, <span class="string">"years old"</span>)</pre>
+        <button class="copy-btn" onclick="copyCode('code-input')">Copy</button>
+      </div>
+      <span class="badge warning">Note: input() always returns a string</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🖨️</span>Print Formatting</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-print">name = <span class="string">"Chidi"</span>
+score = <span class="number">92.5</span>
+
+<span class="comment"># f-string (modern, recommended)</span>
+<span class="func">print</span>(<span class="string">f"Student: {name}, Score: {score}"</span>)
+
+<span class="comment"># .format() method</span>
+<span class="func">print</span>(<span class="string">"Student: {}, Score: {}"</span>.<span class="func">format</span>(name, score))
+
+<span class="comment"># % formatting (older style)</span>
+<span class="func">print</span>(<span class="string">"Student: %s, Score: %.1f"</span> % (name, score))</pre>
+        <button class="copy-btn" onclick="copyCode('code-print')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= DATA TYPES ======= -->
+<div class="section" id="datatypes">
+  <div class="section-title">📦 Data Types</div>
+  <div class="section-desc">Python has several built-in data types. Understanding them is key to writing correct programs.</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📊</span>Core Data Types</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Type</th><th>Example</th><th>Description</th></tr>
+        <tr><td><code>int</code></td><td><code>42, -7, 0</code></td><td>Whole numbers</td></tr>
+        <tr><td><code>float</code></td><td><code>3.14, -0.5</code></td><td>Decimal numbers</td></tr>
+        <tr><td><code>str</code></td><td><code>"hello", 'world'</code></td><td>Text / characters</td></tr>
+        <tr><td><code>bool</code></td><td><code>True, False</code></td><td>Logical values</td></tr>
+        <tr><td><code>list</code></td><td><code>[1, 2, 3]</code></td><td>Ordered, mutable</td></tr>
+        <tr><td><code>tuple</code></td><td><code>(1, 2, 3)</code></td><td>Ordered, immutable</td></tr>
+        <tr><td><code>dict</code></td><td><code>{"a": 1}</code></td><td>Key-value pairs</td></tr>
+        <tr><td><code>set</code></td><td><code>{1, 2, 3}</code></td><td>Unique values, unordered</td></tr>
+        <tr><td><code>NoneType</code></td><td><code>None</code></td><td>Represents "nothing"</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔄</span>Type Conversion</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-types">x = <span class="string">"42"</span>
+y = <span class="func">int</span>(x)         <span class="comment"># "42" → 42</span>
+z = <span class="func">float</span>(x)       <span class="comment"># "42" → 42.0</span>
+a = <span class="func">str</span>(<span class="number">99</span>)         <span class="comment"># 99 → "99"</span>
+b = <span class="func">bool</span>(<span class="number">0</span>)         <span class="comment"># 0 → False  (any non-zero → True)</span>
+
+<span class="comment"># Check type</span>
+<span class="func">print</span>(<span class="func">type</span>(y))       <span class="comment"># &lt;class 'int'&gt;</span>
+<span class="func">print</span>(<span class="func">isinstance</span>(y, <span class="keyword">int</span>))  <span class="comment"># True</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-types')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= OPERATORS ======= -->
+<div class="section" id="operators">
+  <div class="section-title">⚙️ Operators</div>
+  <div class="section-desc">Operators let you perform calculations and comparisons in Python.</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">➕</span>Arithmetic Operators</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Operator</th><th>Symbol</th><th>Example</th><th>Result</th></tr>
+        <tr><td>Addition</td><td><code>+</code></td><td><code>5 + 3</code></td><td>8</td></tr>
+        <tr><td>Subtraction</td><td><code>-</code></td><td><code>10 - 4</code></td><td>6</td></tr>
+        <tr><td>Multiplication</td><td><code>*</code></td><td><code>3 * 4</code></td><td>12</td></tr>
+        <tr><td>Division</td><td><code>/</code></td><td><code>10 / 3</code></td><td>3.333…</td></tr>
+        <tr><td>Floor Division</td><td><code>//</code></td><td><code>10 // 3</code></td><td>3</td></tr>
+        <tr><td>Modulus</td><td><code>%</code></td><td><code>10 % 3</code></td><td>1</td></tr>
+        <tr><td>Exponent</td><td><code>**</code></td><td><code>2 ** 8</code></td><td>256</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔍</span>Comparison & Logical</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-ops">x, y = <span class="number">10</span>, <span class="number">5</span>
+
+<span class="comment"># Comparison (returns True/False)</span>
+<span class="func">print</span>(x == y)   <span class="comment"># False — equal to</span>
+<span class="func">print</span>(x != y)   <span class="comment"># True  — not equal</span>
+<span class="func">print</span>(x &gt; y)    <span class="comment"># True  — greater than</span>
+<span class="func">print</span>(x &lt;= y)   <span class="comment"># False — less or equal</span>
+
+<span class="comment"># Logical</span>
+<span class="func">print</span>(x &gt; <span class="number">5</span> <span class="keyword">and</span> y &lt; <span class="number">10</span>)  <span class="comment"># True</span>
+<span class="func">print</span>(x &lt; <span class="number">5</span> <span class="keyword">or</span>  y &lt; <span class="number">10</span>)  <span class="comment"># True</span>
+<span class="func">print</span>(<span class="keyword">not</span> (x == y))        <span class="comment"># True</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-ops')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= CONTROL FLOW ======= -->
+<div class="section" id="control">
+  <div class="section-title">🔀 Control Flow</div>
+  <div class="section-desc">Control flow lets your program make decisions and repeat actions.</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">❓</span>if / elif / else</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-if">score = <span class="number">75</span>
+
+<span class="keyword">if</span> score &gt;= <span class="number">90</span>:
+    <span class="func">print</span>(<span class="string">"Grade: A"</span>)
+<span class="keyword">elif</span> score &gt;= <span class="number">70</span>:
+    <span class="func">print</span>(<span class="string">"Grade: B"</span>)    <span class="comment"># ← this runs</span>
+<span class="keyword">elif</span> score &gt;= <span class="number">50</span>:
+    <span class="func">print</span>(<span class="string">"Grade: C"</span>)
+<span class="keyword">else</span>:
+    <span class="func">print</span>(<span class="string">"Grade: F"</span>)</pre>
+        <button class="copy-btn" onclick="copyCode('code-if')">Copy</button>
+      </div>
+      <span class="badge warning">Indentation (4 spaces) is mandatory in Python!</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔁</span>for Loop</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-for"><span class="comment"># Loop over a range</span>
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="func">range</span>(<span class="number">1</span>, <span class="number">6</span>):
+    <span class="func">print</span>(i)          <span class="comment"># prints 1 2 3 4 5</span>
+
+<span class="comment"># Loop over a list</span>
+fruits = [<span class="string">"apple"</span>, <span class="string">"mango"</span>, <span class="string">"guava"</span>]
+<span class="keyword">for</span> fruit <span class="keyword">in</span> fruits:
+    <span class="func">print</span>(<span class="string">f"I like {fruit}"</span>)
+
+<span class="comment"># enumerate — get index AND value</span>
+<span class="keyword">for</span> idx, fruit <span class="keyword">in</span> <span class="func">enumerate</span>(fruits):
+    <span class="func">print</span>(<span class="string">f"{idx}: {fruit}"</span>)</pre>
+        <button class="copy-btn" onclick="copyCode('code-for')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔂</span>while Loop</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-while">count = <span class="number">0</span>
+<span class="keyword">while</span> count &lt; <span class="number">5</span>:
+    <span class="func">print</span>(<span class="string">f"Count: {count}"</span>)
+    count += <span class="number">1</span>
+
+<span class="comment"># break — exit loop early</span>
+<span class="keyword">for</span> n <span class="keyword">in</span> <span class="func">range</span>(<span class="number">10</span>):
+    <span class="keyword">if</span> n == <span class="number">5</span>:
+        <span class="keyword">break</span>
+    <span class="func">print</span>(n)
+
+<span class="comment"># continue — skip to next iteration</span>
+<span class="keyword">for</span> n <span class="keyword">in</span> <span class="func">range</span>(<span class="number">6</span>):
+    <span class="keyword">if</span> n == <span class="number">3</span>:
+        <span class="keyword">continue</span>
+    <span class="func">print</span>(n)  <span class="comment"># skips 3</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-while')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= FUNCTIONS ======= -->
+<div class="section" id="functions">
+  <div class="section-title">🔧 Functions</div>
+  <div class="section-desc">Functions are reusable blocks of code. They keep your programs clean and DRY (Don't Repeat Yourself).</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📐</span>Defining & Calling Functions</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-func"><span class="keyword">def</span> <span class="func">greet</span>(name):
+    <span class="string">"""Says hello to someone."""</span>  <span class="comment"># docstring</span>
+    <span class="func">print</span>(<span class="string">f"Hello, {name}!"</span>)
+
+<span class="func">greet</span>(<span class="string">"Adesuwa"</span>)   <span class="comment"># → Hello, Adesuwa!</span>
+
+<span class="comment"># Function with return value</span>
+<span class="keyword">def</span> <span class="func">add</span>(a, b):
+    <span class="keyword">return</span> a + b
+
+result = <span class="func">add</span>(<span class="number">3</span>, <span class="number">7</span>)
+<span class="func">print</span>(result)      <span class="comment"># → 10</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-func')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🎛️</span>Default & Keyword Arguments</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-args"><span class="keyword">def</span> <span class="func">introduce</span>(name, role=<span class="string">"student"</span>):
+    <span class="func">print</span>(<span class="string">f"{name} is a {role}"</span>)
+
+<span class="func">introduce</span>(<span class="string">"Emeka"</span>)                  <span class="comment"># Emeka is a student</span>
+<span class="func">introduce</span>(<span class="string">"Mr Kola"</span>, <span class="string">"teacher"</span>)     <span class="comment"># Mr Kola is a teacher</span>
+<span class="func">introduce</span>(role=<span class="string">"coach"</span>, name=<span class="string">"Yemi"</span>) <span class="comment"># keyword order flexible</span>
+
+<span class="comment"># *args — any number of positional args</span>
+<span class="keyword">def</span> <span class="func">total</span>(*nums):
+    <span class="keyword">return</span> <span class="func">sum</span>(nums)
+
+<span class="func">print</span>(<span class="func">total</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>))  <span class="comment"># → 10</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-args')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">⚡</span>Lambda Functions</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-lambda"><span class="comment"># Anonymous one-liner functions</span>
+square = <span class="keyword">lambda</span> x: x ** <span class="number">2</span>
+<span class="func">print</span>(<span class="func">square</span>(<span class="number">5</span>))  <span class="comment"># → 25</span>
+
+add = <span class="keyword">lambda</span> a, b: a + b
+<span class="func">print</span>(<span class="func">add</span>(<span class="number">3</span>, <span class="number">4</span>))   <span class="comment"># → 7</span>
+
+<span class="comment"># Common use: sorting</span>
+students = [(<span class="string">"Temi"</span>, <span class="number">85</span>), (<span class="string">"Bisi"</span>, <span class="number">92</span>), (<span class="string">"Kola"</span>, <span class="number">78</span>)]
+students.<span class="func">sort</span>(key=<span class="keyword">lambda</span> s: s[<span class="number">1</span>], reverse=<span class="keyword">True</span>)
+<span class="func">print</span>(students)  <span class="comment"># sorted by score, highest first</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-lambda')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= LISTS & DICTS ======= -->
+<div class="section" id="lists">
+  <div class="section-title">📋 Lists, Tuples, Sets & Dicts</div>
+  <div class="section-desc">Python's collection types let you store and organize groups of data efficiently.</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📝</span>Lists — Ordered & Mutable</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-list">fruits = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"mango"</span>]
+
+<span class="comment"># Access — zero-indexed</span>
+<span class="func">print</span>(fruits[<span class="number">0</span>])    <span class="comment"># apple</span>
+<span class="func">print</span>(fruits[-<span class="number">1</span>])   <span class="comment"># mango (last)</span>
+
+<span class="comment"># Modify</span>
+fruits.<span class="func">append</span>(<span class="string">"guava"</span>)   <span class="comment"># add to end</span>
+fruits.<span class="func">insert</span>(<span class="number">1</span>, <span class="string">"pear"</span>) <span class="comment"># insert at index</span>
+fruits.<span class="func">remove</span>(<span class="string">"banana"</span>) <span class="comment"># remove by value</span>
+popped = fruits.<span class="func">pop</span>()   <span class="comment"># remove & return last</span>
+
+<span class="comment"># Slicing</span>
+<span class="func">print</span>(fruits[<span class="number">1</span>:<span class="number">3</span>])   <span class="comment"># items at index 1 and 2</span>
+<span class="func">print</span>(fruits[::<span class="number">-1</span>]) <span class="comment"># reversed list</span>
+
+<span class="comment"># Useful methods</span>
+<span class="func">print</span>(<span class="func">len</span>(fruits))          <span class="comment"># length</span>
+<span class="func">print</span>(<span class="func">sorted</span>(fruits))       <span class="comment"># sorted copy</span>
+<span class="func">print</span>(<span class="string">"apple"</span> <span class="keyword">in</span> fruits)   <span class="comment"># membership check</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-list')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🗂️</span>Dictionaries — Key : Value</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-dict">student = {
+    <span class="string">"name"</span>: <span class="string">"Ngozi"</span>,
+    <span class="string">"age"</span>: <span class="number">22</span>,
+    <span class="string">"grade"</span>: <span class="string">"A"</span>
+}
+
+<span class="comment"># Access</span>
+<span class="func">print</span>(student[<span class="string">"name"</span>])          <span class="comment"># Ngozi</span>
+<span class="func">print</span>(student.<span class="func">get</span>(<span class="string">"age"</span>))      <span class="comment"># 22 (safe, no error)</span>
+
+<span class="comment"># Add / Update</span>
+student[<span class="string">"email"</span>] = <span class="string">"ngozi@email.com"</span>
+student[<span class="string">"age"</span>] = <span class="number">23</span>
+
+<span class="comment"># Loop</span>
+<span class="keyword">for</span> key, val <span class="keyword">in</span> student.<span class="func">items</span>():
+    <span class="func">print</span>(<span class="string">f"{key}: {val}"</span>)
+
+<span class="comment"># Keys, values</span>
+<span class="func">print</span>(student.<span class="func">keys</span>())
+<span class="func">print</span>(student.<span class="func">values</span>())</pre>
+        <button class="copy-btn" onclick="copyCode('code-dict')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📦</span>Tuples & Sets</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-tuple"><span class="comment"># Tuple — immutable (cannot change)</span>
+coords = (<span class="number">6.4550</span>, <span class="number">3.3841</span>)  <span class="comment"># latitude, longitude</span>
+lat, lon = coords          <span class="comment"># unpacking</span>
+<span class="func">print</span>(<span class="string">f"Lat: {lat}, Lon: {lon}"</span>)
+
+<span class="comment"># Set — unique values only</span>
+colors = {<span class="string">"red"</span>, <span class="string">"green"</span>, <span class="string">"blue"</span>, <span class="string">"red"</span>}
+<span class="func">print</span>(colors)    <span class="comment"># {'red', 'green', 'blue'} — no duplicate</span>
+
+colors.<span class="func">add</span>(<span class="string">"yellow"</span>)
+colors.<span class="func">discard</span>(<span class="string">"red"</span>)
+
+<span class="comment"># Set operations</span>
+a = {<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>}; b = {<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>}
+<span class="func">print</span>(a | b)   <span class="comment"># union: {1,2,3,4}</span>
+<span class="func">print</span>(a &amp; b)   <span class="comment"># intersection: {2,3}</span>
+<span class="func">print</span>(a - b)   <span class="comment"># difference: {1}</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-tuple')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= STRINGS ======= -->
+<div class="section" id="strings">
+  <div class="section-title">💬 String Operations</div>
+  <div class="section-desc">Strings are everywhere in Python. Master these methods and you'll handle text like a pro!</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔡</span>Essential String Methods</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-str">text = <span class="string">"  Learn With iKay  "</span>
+
+<span class="func">print</span>(text.<span class="func">strip</span>())       <span class="comment"># remove whitespace: "Learn With iKay"</span>
+<span class="func">print</span>(text.<span class="func">lower</span>())       <span class="comment"># "  learn with ikay  "</span>
+<span class="func">print</span>(text.<span class="func">upper</span>())       <span class="comment"># "  LEARN WITH IKAY  "</span>
+<span class="func">print</span>(text.<span class="func">title</span>())       <span class="comment"># "  Learn With Ikay  "</span>
+<span class="func">print</span>(text.<span class="func">replace</span>(<span class="string">"iKay"</span>, <span class="string">"Python"</span>))
+
+msg = <span class="string">"Python,Data,Science"</span>
+parts = msg.<span class="func">split</span>(<span class="string">","</span>)     <span class="comment"># → ['Python', 'Data', 'Science']</span>
+joined = <span class="string">" | "</span>.<span class="func">join</span>(parts)  <span class="comment"># → "Python | Data | Science"</span>
+
+<span class="func">print</span>(<span class="string">"Python"</span> <span class="keyword">in</span> msg)     <span class="comment"># True</span>
+<span class="func">print</span>(msg.<span class="func">startswith</span>(<span class="string">"Py"</span>)) <span class="comment"># True</span>
+<span class="func">print</span>(msg.<span class="func">count</span>(<span class="string">","</span>))       <span class="comment"># 2</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-str')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">✂️</span>Slicing & Indexing</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-slice">word = <span class="string">"PROGRAMMING"</span>
+<span class="comment">#       0123456789...</span>
+
+<span class="func">print</span>(word[<span class="number">0</span>])        <span class="comment"># P  — first character</span>
+<span class="func">print</span>(word[-<span class="number">1</span>])       <span class="comment"># G  — last character</span>
+<span class="func">print</span>(word[<span class="number">0</span>:<span class="number">4</span>])      <span class="comment"># PROG</span>
+<span class="func">print</span>(word[<span class="number">4</span>:])       <span class="comment"># RAMMING</span>
+<span class="func">print</span>(word[::<span class="number">2</span>])      <span class="comment"># PORMIG — every 2nd char</span>
+<span class="func">print</span>(word[::<span class="number">-1</span>])     <span class="comment"># GNIMMARGORP — reversed</span>
+<span class="func">print</span>(<span class="func">len</span>(word))      <span class="comment"># 11</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-slice')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= FILES & ERRORS ======= -->
+<div class="section" id="files">
+  <div class="section-title">📁 Files & Error Handling</div>
+  <div class="section-desc">Reading/writing files and handling errors gracefully are essential real-world skills.</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📂</span>Reading & Writing Files</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-files"><span class="comment"># Write to a file</span>
+<span class="keyword">with</span> <span class="func">open</span>(<span class="string">"notes.txt"</span>, <span class="string">"w"</span>) <span class="keyword">as</span> f:
+    f.<span class="func">write</span>(<span class="string">"Hello from Python!\n"</span>)
+    f.<span class="func">write</span>(<span class="string">"Learn With iKay\n"</span>)
+
+<span class="comment"># Read entire file</span>
+<span class="keyword">with</span> <span class="func">open</span>(<span class="string">"notes.txt"</span>, <span class="string">"r"</span>) <span class="keyword">as</span> f:
+    content = f.<span class="func">read</span>()
+    <span class="func">print</span>(content)
+
+<span class="comment"># Read line by line</span>
+<span class="keyword">with</span> <span class="func">open</span>(<span class="string">"notes.txt"</span>, <span class="string">"r"</span>) <span class="keyword">as</span> f:
+    <span class="keyword">for</span> line <span class="keyword">in</span> f:
+        <span class="func">print</span>(line.<span class="func">strip</span>())
+
+<span class="comment"># Append to file</span>
+<span class="keyword">with</span> <span class="func">open</span>(<span class="string">"notes.txt"</span>, <span class="string">"a"</span>) <span class="keyword">as</span> f:
+    f.<span class="func">write</span>(<span class="string">"New line added!\n"</span>)</pre>
+        <button class="copy-btn" onclick="copyCode('code-files')">Copy</button>
+      </div>
+      <table style="margin-top:12px">
+        <tr><th>Mode</th><th>Meaning</th></tr>
+        <tr><td><code>"r"</code></td><td>Read (default)</td></tr>
+        <tr><td><code>"w"</code></td><td>Write (overwrites)</td></tr>
+        <tr><td><code>"a"</code></td><td>Append</td></tr>
+        <tr><td><code>"rb"</code></td><td>Read binary</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🛡️</span>Try / Except — Error Handling</div>
+    <div class="card-body">
+      <div style="position:relative">
+        <pre id="code-errors"><span class="keyword">try</span>:
+    num = <span class="func">int</span>(<span class="func">input</span>(<span class="string">"Enter a number: "</span>))
+    result = <span class="number">100</span> / num
+    <span class="func">print</span>(<span class="string">f"Result: {result}"</span>)
+
+<span class="keyword">except</span> ValueError:
+    <span class="func">print</span>(<span class="string">"That's not a valid number!"</span>)
+
+<span class="keyword">except</span> ZeroDivisionError:
+    <span class="func">print</span>(<span class="string">"Cannot divide by zero!"</span>)
+
+<span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+    <span class="func">print</span>(<span class="string">f"Unexpected error: {e}"</span>)
+
+<span class="keyword">else</span>:
+    <span class="func">print</span>(<span class="string">"No errors! Great."</span>)     <span class="comment"># runs if no exception</span>
+
+<span class="keyword">finally</span>:
+    <span class="func">print</span>(<span class="string">"This always runs!"</span>)     <span class="comment"># always executes</span></pre>
+        <button class="copy-btn" onclick="copyCode('code-errors')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= QUIZ ======= -->
+<div class="section" id="quiz">
+  <div class="section-title">🧠 Quick Quiz</div>
+  <div class="section-desc">Test your Python knowledge! Click an option to check your answer.</div>
+
+  <div class="quiz-box" id="q1">
+    <div class="quiz-q">1. What does <code>len([1, 2, 3, 4, 5])</code> return?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="checkQuiz('q1',this,'wrong')">4</div>
+      <div class="quiz-opt" onclick="checkQuiz('q1',this,'correct')">5</div>
+      <div class="quiz-opt" onclick="checkQuiz('q1',this,'wrong')">6</div>
+      <div class="quiz-opt" onclick="checkQuiz('q1',this,'wrong')">Error</div>
+    </div>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q2">
+    <div class="quiz-q">2. Which keyword is used to define a function in Python?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="checkQuiz('q2',this,'wrong')">function</div>
+      <div class="quiz-opt" onclick="checkQuiz('q2',this,'wrong')">define</div>
+      <div class="quiz-opt" onclick="checkQuiz('q2',this,'correct')">def</div>
+      <div class="quiz-opt" onclick="checkQuiz('q2',this,'wrong')">func</div>
+    </div>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q3">
+    <div class="quiz-q">3. What is the output of <code>print(10 // 3)</code>?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="checkQuiz('q3',this,'wrong')">3.33</div>
+      <div class="quiz-opt" onclick="checkQuiz('q3',this,'correct')">3</div>
+      <div class="quiz-opt" onclick="checkQuiz('q3',this,'wrong')">1</div>
+      <div class="quiz-opt" onclick="checkQuiz('q3',this,'wrong')">4</div>
+    </div>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q4">
+    <div class="quiz-q">4. Which of these creates a dictionary?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="checkQuiz('q4',this,'wrong')"><code>[1, 2, 3]</code></div>
+      <div class="quiz-opt" onclick="checkQuiz('q4',this,'wrong')"><code>(1, 2, 3)</code></div>
+      <div class="quiz-opt" onclick="checkQuiz('q4',this,'wrong')"><code>{1, 2, 3}</code></div>
+      <div class="quiz-opt" onclick="checkQuiz('q4',this,'correct')"><code>{"a": 1, "b": 2}</code></div>
+    </div>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q5">
+    <div class="quiz-q">5. What does <code>"hello".upper()</code> return?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="checkQuiz('q5',this,'correct')"><code>"HELLO"</code></div>
+      <div class="quiz-opt" onclick="checkQuiz('q5',this,'wrong')"><code>"Hello"</code></div>
+      <div class="quiz-opt" onclick="checkQuiz('q5',this,'wrong')"><code>"hello"</code></div>
+      <div class="quiz-opt" onclick="checkQuiz('q5',this,'wrong')">Error</div>
+    </div>
+    <div class="quiz-feedback" id="q5-fb"></div>
+  </div>
+
+  <div id="quiz-score" style="margin-top:20px;font-size:1rem;color:var(--green);font-weight:700;"></div>
+</div>
+
+</div><!-- end content -->
+</div><!-- end main -->
+
+<footer class="footer">
+  &copy; 2026 <span>Learn With iKay</span> &mdash; Python Fundamentals Cheat Sheet. All rights reserved.
+</footer>
+
+<script>
+// ---- SECTION SWITCHING ----
+function showSection(id, tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(tab) tab.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ---- PROGRESS BAR ----
+window.addEventListener('scroll', function() {
+  var el = document.documentElement;
+  var scrolled = el.scrollTop || document.body.scrollTop;
+  var height = el.scrollHeight - el.clientHeight;
+  var pct = height > 0 ? (scrolled / height) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+// ---- COPY CODE ----
+function copyCode(id) {
+  var el = document.getElementById(id);
+  var text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = el.nextElementSibling;
+    btn.textContent = 'Copied!';
+    setTimeout(function(){ btn.textContent = 'Copy'; }, 1500);
+  }).catch(function() {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+// ---- QUIZ ----
+var quizAnswered = {};
+function checkQuiz(qid, el, result) {
+  if(quizAnswered[qid]) return;
+  quizAnswered[qid] = true;
+  var opts = el.parentElement.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  el.classList.add(result);
+  var fb = document.getElementById(qid + '-fb');
+  if(result === 'correct') {
+    fb.textContent = '✅ Correct! Well done.';
+    fb.style.color = '#155724';
+  } else {
+    fb.textContent = '❌ Not quite. Try to review this topic!';
+    fb.style.color = '#721c24';
+  }
+  updateScore();
+}
+function updateScore() {
+  var correct = Object.values(quizAnswered).filter(function(v,i){
+    var qid = 'q' + (i+1);
+    var fb = document.getElementById(qid + '-fb');
+    return fb && fb.textContent.startsWith('✅');
+  }).length;
+  // Count correct by checking feedbacks
+  var correctCount = 0;
+  for(var i=1;i<=5;i++){
+    var fb = document.getElementById('q'+i+'-fb');
+    if(fb && fb.textContent.startsWith('✅')) correctCount++;
+  }
+  var total = Object.keys(quizAnswered).length;
+  if(total > 0) {
+    document.getElementById('quiz-score').textContent =
+      '📊 Score: ' + correctCount + '/' + total + ' answered correctly.';
+  }
+}
+
+// ---- SEARCH ----
+var searchData = [
+  {term:'print', section:'basics', desc:'Output text: print("hello")'},
+  {term:'variable', section:'basics', desc:'Store values: name = "Ada"'},
+  {term:'input', section:'basics', desc:'Get user input: input("Enter: ")'},
+  {term:'f-string', section:'basics', desc:'Format strings: f"Hello {name}"'},
+  {term:'int float str bool', section:'datatypes', desc:'Python core data types'},
+  {term:'type isinstance', section:'datatypes', desc:'Check data type'},
+  {term:'arithmetic', section:'operators', desc:'+ - * / // % **'},
+  {term:'comparison logical', section:'operators', desc:'== != > < and or not'},
+  {term:'if elif else', section:'control', desc:'Conditional branching'},
+  {term:'for loop range', section:'control', desc:'Iterate with for loop'},
+  {term:'while break continue', section:'control', desc:'While loops and control keywords'},
+  {term:'def function return', section:'functions', desc:'Define and call functions'},
+  {term:'lambda', section:'functions', desc:'Anonymous one-liner functions'},
+  {term:'list append remove sort', section:'lists', desc:'List operations'},
+  {term:'dict dictionary keys values', section:'lists', desc:'Dictionary operations'},
+  {term:'tuple set', section:'lists', desc:'Tuple (immutable) and Set (unique)'},
+  {term:'string strip lower upper split join', section:'strings', desc:'String methods'},
+  {term:'slicing index', section:'strings', desc:'Access parts of strings and lists'},
+  {term:'open read write file', section:'files', desc:'File reading and writing'},
+  {term:'try except error', section:'files', desc:'Error handling with try/except'},
+];
+
+function handleSearch(val) {
+  var res = document.getElementById('searchResults');
+  if(!val || val.length < 2){ res.innerHTML=''; return; }
+  var q = val.toLowerCase();
+  var matches = searchData.filter(function(d){ return d.term.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q); });
+  if(matches.length === 0){ res.innerHTML = '<span style="color:#888;font-size:0.87rem">No results found.</span>'; return; }
+  res.innerHTML = matches.map(function(m){
+    return '<div onclick="showSection(\''+m.section+'\', document.querySelectorAll(\'.nav-tab\')[getSectionIndex(\''+m.section+'\')])" style="cursor:pointer;padding:8px 14px;border:1px solid var(--gray-border);border-radius:6px;margin-bottom:6px;background:#fff;">'
+      + '<strong style="color:var(--green)">'+m.desc+'</strong>'
+      + '<span style="font-size:0.76rem;color:#888;margin-left:8px">→ '+m.section+'</span>'
+      + '</div>';
+  }).join('');
+}
+
+function getSectionIndex(id) {
+  var map = {basics:0,datatypes:1,operators:2,control:3,functions:4,lists:5,strings:6,files:7,quiz:8};
+  return map[id] || 0;
+}
+</script>
+</body>
+</html>
